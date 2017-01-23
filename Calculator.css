@@ -1,0 +1,89 @@
+button{
+    height: auto;
+    width: auto;
+}
+#Calculator-blue-background {
+    width: 360px;
+    height: 430px;
+    background-color: dodgerblue;
+    margin: 8% auto;
+    padding-left: 6%;
+}
+
+.top-row-margin {
+    margin-top: 6%;
+}
+
+.left-column-button {
+    
+}
+
+.button-specs {
+    height: 52.30px;
+    width: 18.42%;
+    text-align: center;
+    font-size: 36px; 
+    margin-right: 2%;
+    display: inline-block;
+    vertical-align: bottom;
+    border: 1px solid;
+    background-color: white;
+    padding-top: 12px;
+    margin-top: 2%;
+}
+
+@media only screen and (max-width:1200px) and (min-width:680px){ 
+    body {
+        margin: 20%, auto, 40%, auto;
+    }
+}
+
+#answer-block {
+    height: 64.30px;
+    width: 65%;
+    background-color:darkseagreen;
+    display: inline-block;
+    opacity: .7;
+    font-size: 55px;
+    text-align: right;
+    vertical-align: text-bottom;
+}
+
+#clear-button.button-height {
+    height: 46.30px;
+    width: 16.67%;
+    text-align: center;
+    font-size: 36px; 
+    margin-right: 2%;
+    display: inline-block;
+    border: 1px solid;
+    background-color: white;
+    padding-top: 12px;
+    margin-top: 2%;
+    line-height: 1.0;
+    transform: translate(0px,-10px);
+    -webkit-transform: translate(0px, -2px);
+}
+
+#number1: hover {
+    cursor: pointer;
+}
+
+#answer-block-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#answer-block-number {
+    position: absolute;
+    bottom: 82%;
+    left: 65%;
+}
+.highlight{
+    background-color: chartreuse;
+    opacity: .9;
+}
+
+
+
