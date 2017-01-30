@@ -1,6 +1,6 @@
 
 var n1 = 0;
-var n2 = undefined;
+var n2;
 var operator = undefined;
 
 function pageLoad() {
@@ -11,43 +11,53 @@ function presentOperator(symbol){
     if(!operator){
         operator = symbol;
     }else if(operator && n2!=undefined) {
-        n1 = parseInt(document.getElementById('answer-block-number'));
-        n2 = undefined;
+        n1 = n1;
+//        parseInt(document.getElementById('answer-block-number'))
+        n2 = n2;
         operator = symbol;
     }
 }
 
-function updateScreen() {
+function updateScreen(symbol) {
     var el = document.getElementById('answer-block-number');
     if(!n2 && operator!=undefined){
         el.innerHTML = n1 + operator;
     }else if(!n2 && !operator) {
         el.innerHTML = n1 + "";
-    }else if (n2>=0) {
+    }else if (n2>=0 && symbol === operator) {
+        el.innerHTML = eval(n1 + operator + n2) + "";
+    }else if(n2>=0 && symbol !== operator){
         el.innerHTML = n1 + operator + n2;
     }else if (n2<0) {
-        el.innerHTML = n1 + operator + "(-" + n2 +")";
+        el.innerHTML = n1 + operator + "(" + n2 +")";
     }
 }
 
 function pressedNumberButton(num) {
-    if(!operator && n1 ==='0'){
+    if(!operator && n1 ===0){
         n1 = num;
-    }else if(!operator && n1!=='0') {
+    }else if(!operator && n1!==0) {
         n1 = n1 + num;
-    }else if(operator && (n2 =='0' || n2 ==undefined)) {
-        n2 = num;
-    }else if(operator && n2!=='0') {
+    }else if(operator && (n2 ==0 || n2 ==undefined)) {
+        n2 = parseInt(num);
+    }else if(operator && n2!==0) {
         n2 = n2+num;
     }
 }
+
+function clearScreen(){
+    document.getElementById('answer-block-number').innerHTML = "0";
+    n1 = 0
+    n2 = undefined;
+    operator = undefined;
+};
 
 $(document).ready(function() {
     pageLoad();
     $('.operator').on('click',function() {
         var symbol = $(this).attr('symbol');
         presentOperator(symbol);
-        updateScreen();
+        updateScreen(symbol);
     });
     
     $('.number').on('click',function(event) {
@@ -56,10 +66,18 @@ $(document).ready(function() {
         updateScreen();
     });
     
-    function clearScreen(){
-    document.getElementById('answer-block-number').innerHTML = '0';
-};
+    $('#clear-button').on('click',function() {
+        clearScreen();
+    });
     
+    $('.make-negative').on('click',function() {
+        if(!n2 && n1 !=='0') {
+            n1 = (parseInt(n1)*-1);
+        }else if (n2!=='0') {
+            n2 = (parseInt(n2)*-1);
+        }
+        updateScreen();
+    })
 })
 //function numberFunction(symbol){
 //    if(operator)
@@ -84,9 +102,9 @@ $(document).ready(function() {
 //}
 //
 //
-function clearScreen(){
-    document.getElementById('answer-block-number').innerHTML = '0';
-};
+//function clearScreen(){
+//    document.getElementById('answer-block-number').innerHTML = '0';
+//};
 //
 //
 //function combinator(){
