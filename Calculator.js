@@ -7,14 +7,35 @@ function pageLoad() {
     updateScreen();
 }
 
+function combinator(){
+    var screen = document.getElementById('answer-block-number');
+    var total = eval(screen.innerHTML);
+    screen.innerHTML = total + "";
+    n1 = total;
+    n2 = 0;
+} 
+
 function presentOperator(symbol){
     if(!operator){
         operator = symbol;
-    }else if(operator && n2!=undefined) {
-        n1 = n1;
+    }else if(operator && n2>0) {
+        n1 = eval(document.getElementById('answer-block-number').innerHTML);
+        n2 = 0;
 //        parseInt(document.getElementById('answer-block-number'))
-        n2 = n2;
+//        n2 = n2;
         operator = symbol;
+    }
+    else if(operator && n2<0) {
+        var el = document.getElementById('answer-block-number');
+        n1 = eval(el.innerHTML);
+        n2 = 0;
+    }
+}
+
+function makeNegative() {
+    var el = document.getElementById('answer-block-number');
+    if(n2<0) {
+        el.innerHTML = n1 + operator + "(" + n2 +")";
     }
 }
 
@@ -29,7 +50,9 @@ function updateScreen(symbol) {
     }else if(n2>=0 && symbol !== operator){
         el.innerHTML = n1 + operator + n2;
     }else if (n2<0) {
-        el.innerHTML = n1 + operator + "(" + n2 +")";
+        var n2String = n2 + "";
+        var evaluate = eval(el.innerHTML);
+        el.innerHTML = evaluate;
     }
 }
 
@@ -71,12 +94,18 @@ $(document).ready(function() {
     });
     
     $('.make-negative').on('click',function() {
+        var symbol = $(this).attr('symbol');
         if(!n2 && n1 !=='0') {
             n1 = (parseInt(n1)*-1);
         }else if (n2!=='0') {
             n2 = (parseInt(n2)*-1);
         }
-        updateScreen();
+        makeNegative();
+    })
+    
+     $('.combinator').on('click',function() {
+        var symbol = $(this).attr('symbol');
+        combinator();
     })
 })
 //function numberFunction(symbol){
@@ -107,11 +136,11 @@ $(document).ready(function() {
 //};
 //
 //
-//function combinator(){
-//    var screen = document.getElementById('answer-block-number');
-//    var total = eval(screen.innerHTML);
-//    screen.innerHTML = total + "";
-//} 
+function combinator(){
+    var screen = document.getElementById('answer-block-number');
+    var total = eval(screen.innerHTML);
+    screen.innerHTML = total + "";
+} 
 //
 //function calc(){
 //    var screen = document.getElementById('answer-block-number');
@@ -136,11 +165,11 @@ $(document).ready(function() {
 //        canOperator=false;
 //    });
 //    
-//    $('.combinator').on('click',function() {
-//        var symbol = $(this).attr('symbol');
-//        combinator();
-//        $('.highlight').removeClass('highlight');
-//    })
+    $('.combinator').on('click',function() {
+        var symbol = $(this).attr('symbol');
+        combinator();
+        $('.highlight').removeClass('highlight');
+    })
 //    
 //    
 //    $('.number').on('click',function() {
