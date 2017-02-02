@@ -76,9 +76,7 @@ button{
 }
 
 #answer-block-number {
-    position: absolute;
-    bottom: 82%;
-    left: 65%;
+    transform: translateY(14%);
 }
 .highlight{
     background-color: chartreuse;

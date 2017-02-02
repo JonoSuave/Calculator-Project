@@ -3,6 +3,29 @@ var n1 = 0;
 var n2;
 var operator = undefined;
 
+var canDec = true;
+var screen = $('#answer-block-number');
+
+var dict = {
+    48: 0,
+    49: 1,
+    50: 2,
+    51: 3,
+    52: 4,
+    53: 5,
+    54: 6,
+    55: 7,
+    56: 8,
+    57: 9,
+    46: 'delete',
+    13: '=',
+    107: '+',
+    109: '-',
+    106: '*',
+    111: '/',
+    110: '.'
+}
+
 function pageLoad() {
     updateScreen();
 }
@@ -13,6 +36,7 @@ function combinator(){
     screen.innerHTML = total + "";
     n1 = total;
     n2 = 0;
+    operator = undefined;
 } 
 
 function presentOperator(symbol){
@@ -24,18 +48,21 @@ function presentOperator(symbol){
 //        parseInt(document.getElementById('answer-block-number'))
 //        n2 = n2;
         operator = symbol;
-    }
-    else if(operator && n2<0) {
+    }else if(operator && n2<0) {
         var el = document.getElementById('answer-block-number');
         n1 = eval(el.innerHTML);
         n2 = 0;
+    }else if(operator && (!n2 || n2 === 0)) {
+        operator = symbol;         
     }
 }
 
 function makeNegative() {
     var el = document.getElementById('answer-block-number');
-    if(n2<0) {
+    if(n2!==0) {
         el.innerHTML = n1 + operator + "(" + n2 +")";
+    }else if(n1 !==0 && !n2) {
+        el.innerHTML = n1;
     }
 }
 
@@ -60,9 +87,10 @@ function pressedNumberButton(num) {
     if(!operator && n1 ===0){
         n1 = num;
     }else if(!operator && n1!==0) {
+        n1 = n1.toString();
         n1 = n1 + num;
     }else if(operator && (n2 ==0 || n2 ==undefined)) {
-        n2 = parseInt(num);
+        n2 = num;
     }else if(operator && n2!==0) {
         n2 = n2+num;
     }
@@ -75,8 +103,22 @@ function clearScreen(){
     operator = undefined;
 };
 
+function decimal() {
+    if(canDec && !n2){
+        n1 = n1 + '.';
+        screen.innerHTML = n1;    
+    }else if(n2!==0 && n2!==undefined && n2.indexOf('.')===-1) {
+        canDec = true;
+        n2 = n2 + '.';
+        updateScreen();
+    }
+    canDec = false;
+}
+
 $(document).ready(function() {
     pageLoad();
+    var screen = $('#answer-block-number');
+    var canDec = true;
     $('.operator').on('click',function() {
         var symbol = $(this).attr('symbol');
         presentOperator(symbol);
@@ -88,6 +130,40 @@ $(document).ready(function() {
        pressedNumberButton(num);
         updateScreen();
     });
+    
+    $(document).keyup(function(event) {
+        var numberPressed = dict[event.keyCode];
+        switch (event.keyCode) {
+            case 48:
+            case 49:
+            case 50:
+            case 51:
+            case 52:
+            case 53:
+            case 54:
+            case 55:
+            case 56:
+            case 57:
+                pressedNumberButton(dict[event.keyCode]);
+                break;
+            case 13:
+                combinator();
+                break;
+            case 46:
+                clearScreen();
+                break;
+            case 110:
+                decimal();
+            case 106:
+            case 107:
+            case 109:                               
+            case 111: 
+                var symbol = dict[event.keyCode];                         
+                presentOperator(symbol);
+                break;
+        }
+        updateScreen();
+     });
     
     $('#clear-button').on('click',function() {
         clearScreen();
@@ -103,45 +179,21 @@ $(document).ready(function() {
         makeNegative();
     })
     
+    $('#decimal').on('click',function(){
+        decimal();
+    });
+    
      $('.combinator').on('click',function() {
         var symbol = $(this).attr('symbol');
         combinator();
+        canDec = true;
     })
-})
-//function numberFunction(symbol){
-//    if(operator)
-//    n2 = parseInt(symbol);
-//    updateScreen();
-//};
-//
-//function updateScreen() {
-//    var currentScreenText = document.getElementById('answer-block-number');
-//    if(!n2) {
-//        currentScreenText.innerHTML = n1 +'';
-//    } else if(n2 >=0) {
-//        currentScreenText.innerHTML = n1 + ' ' + operator + ' ' + n2;
-//    } else if (n2 < 0) {
-//        currentScreenText.innerHTML = n1 + '(-' + n2 +')';
-//    }
-//}
-//
-//function decimalFunction(value) {
-//    currentScreenText.innerHTML = currentScreenText.innerHTML + value;
-//    canDec = true;
-//}
-//
-//
+     
+     
+});
 //function clearScreen(){
 //    document.getElementById('answer-block-number').innerHTML = '0';
 //};
-//
-//
-function combinator(){
-    var screen = document.getElementById('answer-block-number');
-    var total = eval(screen.innerHTML);
-    screen.innerHTML = total + "";
-} 
-//
 //function calc(){
 //    var screen = document.getElementById('answer-block-number');
 //    var total = eval(screen.innerHTML);
@@ -165,13 +217,6 @@ function combinator(){
 //        canOperator=false;
 //    });
 //    
-    $('.combinator').on('click',function() {
-        var symbol = $(this).attr('symbol');
-        combinator();
-        $('.highlight').removeClass('highlight');
-    })
-//    
-//    
 //    $('.number').on('click',function() {
 //        var symbol = $(this).attr('symbol');
 //        numberFunction(symbol);
@@ -180,14 +225,7 @@ function combinator(){
 ////    $('#plus').on('click',additionFunction);
 ////    $('#division').on('click',divisionFunction);
 //    
-//    $('#decimal').on('click',function(){
-//        $('.highlight').removeClass('highlight');
-//        if(canDec){
-//            screenText = screen.html();
-//            screen.html(screenText + '.');
-//            canDec = false;
-//        }
-//    });
+    
 //    
 //    $('.operator').on('click',function() {
 //       if(canOperator) {
